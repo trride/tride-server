@@ -36,9 +36,17 @@ const tride = async (req, res) => {
   const allPrices = await Promise.all([gojekPrice, grabPrice, uberPrice]);
 
   send(res, 200, {
-    gojek: allPrices[0],
-    grab: allPrices[1],
-    uber: allPrices[2]
+    prices: {
+      gojek: {
+        ...allPrices[0].price
+      },
+      grab: {
+        ...allPrices[1].price
+      },
+      uber: {
+        ...allPrices[2].price
+      }
+    }
   });
 };
 
