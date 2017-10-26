@@ -1,6 +1,4 @@
 require("dotenv").config();
-const { send } = require("micro");
-const { router, get } = require("microrouter");
 
 // gojek
 const { GojekHandler } = require("gojek-handler");
@@ -18,24 +16,24 @@ const uber = new UberHandler({
   token: process.env.uber_token
 });
 
-const tride = async (req, res) => {
-  const payload = {
-    start: {
-      lat: +req.query.start_lat || 0,
-      long: +req.query.start_long || 0
-    },
-    end: {
-      lat: +req.query.end_lat || 0,
-      long: +req.query.end_long || 0
-    }
-  };
+const payload = {
+  start: {
+    lat: -6.2268115,
+    long: 106.8070965
+  },
+  end: {
+    lat: -6.2759909,
+    long: 106.8189589
+  }
+};
 
+const test = async () => {
   const gojekPrice = gojek.getMotorBikePrice(payload.start, payload.end);
   const grabPrice = grab.getMotorBikePrice(payload.start, payload.end);
   const uberPrice = uber.getMotorBikePrice(payload.start, payload.end);
   const allPrices = await Promise.all([gojekPrice, grabPrice, uberPrice]);
 
-  send(res, 200, {
+  return {
     prices: {
       gojek: {
         ...allPrices[0].price
@@ -47,9 +45,7 @@ const tride = async (req, res) => {
         ...allPrices[2].price
       }
     }
-  });
+  };
 };
 
-const notFound = (req, res) => send(res, 404, "Route not found.");
-
-module.exports = router(get("/", tride), get("/*", notFound));
+test().then(console.log);
