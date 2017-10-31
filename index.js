@@ -74,8 +74,14 @@ const getPrices = async (req, res) => {
 
 const getPoints = async (req, res) => {
   const { lat, long, name } = req.query;
-  const points = await gojek.stringToPOI(name, { lat, long });
-  send(res, 200, points);
+  const { poi } = await gojek.stringToPOI(name, { lat, long });
+  send(res, 200, { points: poi });
+};
+
+const getCoords = async (req, res) => {
+  const { placeid } = req.query;
+  const coords = await gojek.poiToCoord(placeid);
+  send(res, 200, { coords });
 };
 
 const notFound = (req, res) => send(res, 404, "Route not found.");
@@ -83,5 +89,6 @@ const notFound = (req, res) => send(res, 404, "Route not found.");
 module.exports = router(
   get("/prices", getPrices),
   get("/points", getPoints),
+  get("/coords", getCoords),
   get("/*", notFound)
 );
