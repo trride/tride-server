@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("now-env").config();
 const { send } = require("micro");
 const { router, get } = require("microrouter");
 
