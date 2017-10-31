@@ -3,8 +3,8 @@
 
 
 "@tride/gojek-handler@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.1.1.tgz#1c9a47621813e3cfcf44dd4b20ca1e949f4f98b8"
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.1.5.tgz#f6196e91ceeb39b296b66ef745de3382ceadb671"
   dependencies:
     axios "^0.17.0"
 

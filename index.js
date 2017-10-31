@@ -3,6 +3,7 @@ const { send } = require("micro");
 const { router, get } = require("microrouter");
 
 // gojek
+// const GojekHandler = require("@tride/gojek-handler");
 const GojekHandler = require("@tride/gojek-handler");
 const gojek = new GojekHandler({
   authorization: process.env.gojek_token
@@ -18,7 +19,7 @@ const uber = new UberHandler({
   token: process.env.uber_token
 });
 
-const tride = async (req, res) => {
+const getPrices = async (req, res) => {
   const payload = {
     start: {
       lat: +req.query.start_lat || 0,
@@ -71,6 +72,16 @@ const tride = async (req, res) => {
   });
 };
 
+const getPoints = async (req, res) => {
+  const { lat, long, name } = req.query;
+  const points = await gojek.stringToPOI(name, { lat, long });
+  send(res, 200, points);
+};
+
 const notFound = (req, res) => send(res, 404, "Route not found.");
 
-module.exports = router(get("/", tride), get("/*", notFound));
+module.exports = router(
+  get("/prices", getPrices),
+  get("/points", getPoints),
+  get("/*", notFound)
+);
