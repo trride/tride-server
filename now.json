@@ -1,0 +1,8 @@
+{
+  "env": {
+    "gojek_token": "@gojek_token",
+    "grab_token": "@grab_token",
+    "uber_token": "@uber_token"
+  },
+  "alias": "tride-api"
+}

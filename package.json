@@ -6,11 +6,12 @@
   "author": "<muhammad.mustadi@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@tride/gojek-handler": "^0.1.1",
     "axios": "^0.17.0",
     "dotenv": "^4.0.0",
-    "gojek-handler": "0.0.2",
     "micro": "^9.0.0",
     "microrouter": "^3.0.0",
+    "now-env": "^1.4.0",
     "tride-grab-handler": "^0.1.3",
     "uber-handler": "^0.1.2"
   },
@@ -20,8 +21,5 @@
   "scripts": {
     "start": "micro",
     "dev": "micro-dev"
-  },
-  "now": {
-    "alias": "tride-api"
   }
 }
