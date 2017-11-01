@@ -167,4 +167,55 @@
 - ### Request Fastest
     POST `/request/fastest`
 
-    
+    **Headers**
+    ```
+    {
+        'Authorization': // String (authorization token),
+        'Content-Type': 'application/json'
+    }
+    ```
+    **Body**
+    ```
+    {
+        "services": [
+            {
+                "service": "gojek"
+                "requestKey": {
+                    "key": // String (token)
+                    "expiresAt": // Unix_timestamp
+                }
+            },
+            {
+                "service": "grab"
+                "requestKey": {
+                    "key": // String (token)
+                    "expiresAt": // Unix_timestamp
+                }
+            },
+            {
+                "service": "uber"
+                "requestKey": {
+                    "key": // String (token)
+                    "expiresAt": // Unix_timestamp
+                }
+            },
+        ],
+        "itinerary": {
+            "start": {
+                "lat": // latitude:Number
+                "long": // longitude:Number
+            },
+            "end": {
+                "lat": // latitude:Number
+                "long": // longitude:Number
+            }
+        }
+    }
+    ```
+    **Response**
+    ```
+    {
+        "service": "gojek|grab|uber",
+        "requestId": // String,
+    } 
+    ```
