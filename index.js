@@ -32,43 +32,39 @@ const getPrices = async (req, res) => {
   };
 
   const gojekPrice = gojek
-    .getMotorBikePrice(payload.start, payload.end)
-    .then(({ price }) => price)
+    .getEstimate(payload.start, payload.end)
+    .then(data => ({ ...data, service: "gojek" }))
     .catch(err => {
       console.log("[GOJEK ERROR]");
       console.log(err);
       return err.response.data;
     });
   const grabPrice = grab
-    .getMotorBikePrice(payload.start, payload.end)
-    .then(({ price }) => price)
+    .getEstimate(payload.start, payload.end)
+    .then(data => ({ ...data, service: "grab" }))
     .catch(err => {
       console.log("[GRAB ERROR]");
       console.log(err);
       return err.response.data;
     });
-  const uberPrice = uber
-    .getMotorBikePrice(payload.start, payload.end)
-    .then(({ price }) => price)
-    .catch(err => {
-      console.log("[UBER ERROR]");
-      console.log(err);
-      return err.response.data;
-    });
-  const allPrices = await Promise.all([gojekPrice, grabPrice, uberPrice]);
+  // const uberPrice = uber
+  //   .getMotorBikePrice(payload.start, payload.end)
+  //   .then(data => ({ ...data, service: "uber" }))
+  //   // .then(({ price }) => price)
+  //   .catch(err => {
+  //     console.log("[UBER ERROR]");
+  //     console.log(err);
+  //     return err.response.data;
+  //   });
+  const allPrices = await Promise.all([
+    gojekPrice,
+    grabPrice
+    // uberPrice
+  ]);
 
+  allPrices.sort((a, b) => a.price - b.price)[0].cheapest = true;
   send(res, 200, {
-    prices: {
-      gojek: {
-        ...allPrices[0]
-      },
-      grab: {
-        ...allPrices[1]
-      },
-      uber: {
-        ...allPrices[2]
-      }
-    }
+    estimates: allPrices
   });
 };
 
@@ -87,7 +83,7 @@ const getCoords = async (req, res) => {
 const notFound = (req, res) => send(res, 404, "Route not found.");
 
 module.exports = router(
-  get("/prices", getPrices),
+  get("/estimate", getPrices),
   get("/points", getPoints),
   get("/coords", getCoords),
   get("/*", notFound)
