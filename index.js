@@ -10,7 +10,7 @@ const gojek = new GojekHandler({
 });
 
 // grab
-const GrabHandler = require("tride-grab-handler");
+const GrabHandler = require("@tride/grab-handler");
 const grab = new GrabHandler(process.env.grab_token);
 
 // uber
