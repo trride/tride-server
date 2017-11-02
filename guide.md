@@ -123,7 +123,7 @@
     ```
 
 - ### Request Ride by Service
-    POST `/request/:service`
+    POST `/rides/:service`
     
     **Headers**
     ```
@@ -165,7 +165,7 @@
     ```
 
 - ### Request Fastest
-    POST `/request/fastest`
+    POST `/rides/fastest`
 
     **Headers**
     ```

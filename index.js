@@ -80,11 +80,32 @@ const getCoords = async (req, res) => {
   send(res, 200, { coords });
 };
 
+const createRideByService = async (req, res) => {
+  const { service } = req.params;
+  const { requestKey: { key }, itinerary: { start, end } } = await json(req);
+  const lowercaseService = service.toLowerCase();
+
+  if (lowercaseService === "gojek") {
+    const { requestId } = await gojek.requestRide(key, start, end);
+    send(res, 200, { requestId });
+  } else if (lowercaseService === "grab") {
+    const { requestId } = await grab.requestRide(key, start, end);
+    send(res, 200, { requestId });
+  }
+
+  send(res, 404, {
+    error: {
+      message: "Service not found"
+    }
+  });
+};
+
 const notFound = (req, res) => send(res, 404, "Route not found.");
 
 module.exports = router(
   get("/estimate", getPrices),
   get("/points", getPoints),
   get("/coords", getCoords),
+  post("/rides/:service", createRideByService),
   get("/*", notFound)
 );
