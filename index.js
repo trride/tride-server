@@ -16,7 +16,7 @@ const grab = new GrabHandler(process.env.grab_token);
 // uber
 const UberHandler = require("uber-handler");
 const uber = new UberHandler({
-  token: process.env.uber_token
+  access_token: process.env.uber_token
 });
 
 const getPrices = async (req, res) => {
@@ -45,19 +45,16 @@ const getPrices = async (req, res) => {
         : { errors: [err] };
     })
     .then(data => ({ ...data, service: "grab" }));
-  // const uberPrice = uber
-  //   .getMotorBikePrice(payload.start, payload.end)
-  //   .then(data => ({ ...data, service: "uber" }))
-  //   // .then(({ price }) => price)
-  //   .catch(err => {
-  //     console.log("[UBER ERROR]");
-  //     console.log(err);
-  //     return err.response.data;
-  //   });
+  const uberPrice = uber
+    .getEstimate(payload.start, payload.end)
+    .then(data => ({ ...data, service: "uber" }))
+    .catch(err => {
+      return err.response.data;
+    });
   const allPrices = await Promise.all([
     gojekPrice,
-    grabPrice
-    // uberPrice
+    grabPrice,
+    uberPrice
   ]);
 
   allPrices.sort((a, b) => a.price - b.price);
@@ -96,6 +93,9 @@ const createRideByService = async (req, res) => {
     } else if (lowercaseService === "grab") {
       const { requestId } = await grab.requestRide(key, start, end);
       return send(res, 200, { requestId });
+    } else if (lowercaseService === "uber") {
+      const { requestId } = await uber.requestRide(key, start, end);
+      return send(res, 200, { requestId });
     }
   } catch (err) {
     return send(res, 500, {
@@ -121,6 +121,9 @@ const cancelRideById = async (req, res) => {
     } else if (lowercaseService === "grab") {
       const { cancelled } = await grab.cancelRide(requestId);
       return send(res, 200, { cancelled });
+    } else if (lowercaseService === "uber") {
+      const { cancelled } = await uber.cancelRide(requestId);
+      return send(res, 200, { cancelled })
     }
   } catch (err) {
     return send(res, 500, {
