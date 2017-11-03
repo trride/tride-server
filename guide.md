@@ -33,6 +33,7 @@
         **Return**
         ```js
         {
+            service: // String (service name)
             price: // Number in IDR 
             requestKey: {
                 key: // String (token)
@@ -66,6 +67,7 @@
         **Return**
         ```js
         {
+            service: // String (service name)
             requestId: //requestId
         }
         ```
@@ -81,6 +83,7 @@
         **Return**
         ```
         {
+            service: // String (service name)
             success: // Boolean
         }
         ```
