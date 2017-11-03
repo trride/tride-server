@@ -33,20 +33,18 @@ const getPrices = async (req, res) => {
 
   const gojekPrice = gojek
     .getEstimate(payload.start, payload.end)
-    .then(data => ({ ...data, service: "gojek" }))
     .catch(err => {
-      console.log("[GOJEK ERROR]");
-      console.log(err);
       return err.response.data;
-    });
+    })
+    .then(data => ({ ...data, service: "gojek" }));
   const grabPrice = grab
     .getEstimate(payload.start, payload.end)
-    .then(data => ({ ...data, service: "grab" }))
     .catch(err => {
-      console.log("[GRAB ERROR]");
-      console.log(err);
-      return err.response.data;
-    });
+      return typeof err === "string"
+        ? { errors: [{ error: { message: err } }] }
+        : { errors: [err] };
+    })
+    .then(data => ({ ...data, service: "grab" }));
   // const uberPrice = uber
   //   .getMotorBikePrice(payload.start, payload.end)
   //   .then(data => ({ ...data, service: "uber" }))
@@ -62,7 +60,10 @@ const getPrices = async (req, res) => {
     // uberPrice
   ]);
 
-  allPrices.sort((a, b) => a.price - b.price)[0].cheapest = true;
+  allPrices.sort((a, b) => a.price - b.price);
+  if (typeof allPrices[0].price === "number") {
+    allPrices[0].cheapest = true;
+  }
   send(res, 200, {
     estimates: allPrices
   });
@@ -70,7 +71,10 @@ const getPrices = async (req, res) => {
 
 const getPoints = async (req, res) => {
   const { lat, long, name } = req.query;
-  const { poi } = await gojek.stringToPOI(name, { lat, long });
+  if (!name) {
+    return send(res, 400, { error: "gimme names" });
+  }
+  const { poi } = (await gojek.stringToPOI(name, { lat, long })) || [];
   send(res, 200, { points: poi });
 };
 
