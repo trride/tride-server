@@ -1,6 +1,6 @@
 require("now-env").config();
 const { send, json } = require("micro");
-const { router, get, post } = require("microrouter");
+const { router, get, post, del } = require("microrouter");
 
 // gojek
 // const GojekHandler = require("@tride/gojek-handler");
@@ -85,17 +85,48 @@ const createRideByService = async (req, res) => {
   const { requestKey: { key }, itinerary: { start, end } } = await json(req);
   const lowercaseService = service.toLowerCase();
 
-  if (lowercaseService === "gojek") {
-    const { requestId } = await gojek.requestRide(key, start, end);
-    send(res, 200, { requestId });
-  } else if (lowercaseService === "grab") {
-    const { requestId } = await grab.requestRide(key, start, end);
-    send(res, 200, { requestId });
+  try {
+    if (lowercaseService === "gojek") {
+      const { requestId } = await gojek.requestRide(key, start, end);
+      return send(res, 200, { requestId });
+    } else if (lowercaseService === "grab") {
+      const { requestId } = await grab.requestRide(key, start, end);
+      return send(res, 200, { requestId });
+    }
+  } catch (err) {
+    return send(res, 500, {
+      service: lowercaseService,
+      error: err.response.data
+    });
   }
 
   send(res, 404, {
     error: {
-      message: "Service not found"
+      message: `Service ${lowercaseService} not found`
+    }
+  });
+};
+
+const cancelRideById = async (req, res) => {
+  const { service, requestId } = req.params;
+  const lowercaseService = service.toLowerCase();
+  try {
+    if (lowercaseService === "gojek") {
+      const { cancelled } = await gojek.cancelRide(requestId);
+      return send(res, 200, { cancelled });
+    } else if (lowercaseService === "grab") {
+      const { cancelled } = await grab.cancelRide(requestId);
+      return send(res, 200, { cancelled });
+    }
+  } catch (err) {
+    return send(res, 500, {
+      service: lowercaseService,
+      error: err.response.data
+    });
+  }
+  send(res, 404, {
+    error: {
+      message: `Service ${lowercaseService} not found`
     }
   });
 };
@@ -107,5 +138,6 @@ module.exports = router(
   get("/points", getPoints),
   get("/coords", getCoords),
   post("/rides/:service", createRideByService),
+  del("/rides/:service/:requestId", cancelRideById),
   get("/*", notFound)
 );
