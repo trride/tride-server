@@ -1,6 +1,12 @@
 require("now-env").config();
 const { send, json } = require("micro");
 const { router, get, post, del } = require("microrouter");
+const firebase = require('firebase')
+const firebaseApp = firebase.initializeApp({
+  databaseURL: 'https://tride-431c6.firebaseio.com'
+})
+const db = firebaseApp.database()
+const shortid = require('shortid')
 
 // gojek
 // const GojekHandler = require("@tride/gojek-handler");
@@ -16,7 +22,8 @@ const grab = new GrabHandler(process.env.grab_token);
 // uber
 const UberHandler = require("uber-handler");
 const uber = new UberHandler({
-  access_token: process.env.uber_token
+  access_token: process.env.uber_token,
+  sandbox: true
 });
 
 const getPrices = async (req, res) => {
@@ -87,16 +94,42 @@ const createRideByService = async (req, res) => {
   const lowercaseService = service.toLowerCase();
 
   try {
-    if (lowercaseService === "gojek") {
-      const { requestId } = await gojek.requestRide(key, start, end);
-      return send(res, 200, { requestId });
-    } else if (lowercaseService === "grab") {
-      const { requestId } = await grab.requestRide(key, start, end);
-      return send(res, 200, { requestId });
-    } else if (lowercaseService === "uber") {
-      const { requestId } = await uber.requestRide(key, start, end);
-      return send(res, 200, { requestId });
-    }
+
+    let response
+    
+    if (lowercaseService === "gojek")
+    response = await gojek.requestRide(key, start, end);
+    else if (lowercaseService === "grab")
+    response = await grab.requestRide(key, start, end);
+    else if (lowercaseService === "uber")
+    response = await uber.requestRide(key, start, end);
+    
+    const field = 'rides'
+    const trideId = shortid.generate()
+
+    db.ref().child(field).child(trideId).set(response)
+    send(res, 200, {...response, trideId});
+
+    const interval = setInterval(() => {
+      const { requestId } = response
+      const servicesGetStatusMethod = {
+        // gojek: gojek.rideStatus,
+        // grab: grab.rideStatus,
+        uber: uber.rideStatus
+      }
+      const rideRequest = servicesGetStatusMethod[lowercaseService]
+
+      rideRequest(requestId)
+      .then(status => {
+        db.ref().child(field).child(trideId).set(status)
+
+        if (status.status == 'completed' || status.status == 'canceled')
+        clearInterval(interval)
+      })
+      .catch(console.log)
+
+    }, 2000)
+
   } catch (err) {
     return send(res, 500, {
       service: lowercaseService,
