@@ -68,7 +68,34 @@
         ```js
         {
             service: // String (service name)
-            requestId: //requestId
+            requestId: // requestId
+        }
+        ```
+    - ### rideStatus
+        get ride status
+        ```
+        rideStatus(requestId)
+        ```
+        **Parameters**
+
+        `requestId`:String (*optional for uber*)
+
+        **Return**
+        ```
+        {
+            status: // String 'processing|accepted|on_the_way|completed'
+            service: // String (service name)
+            requestId: // requestId
+            driver: { // null when 'processing' and 'completed'
+                name: // driver name
+                rating: // driver rating (e.g. 4.8)
+                pictureUrl: // driver's portrait url
+                phoneNumber: // String driver's phone number
+                vehicle: {
+                    plate: // vehicle license plate (e.g. B 1234 AA)
+                    name: // vehicle name (e.g. Honda Vario)
+                }
+            }
         }
         ```
     - ### cancelRide
