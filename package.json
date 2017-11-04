@@ -10,6 +10,7 @@
     "@tride/grab-handler": "latest",
     "axios": "^0.17.0",
     "dotenv": "^4.0.0",
+    "firebase": "^4.6.1",
     "micro": "^9.0.0",
     "microrouter": "^3.0.0",
     "now-env": "^1.4.0",
