@@ -83,10 +83,10 @@
         **Return**
         ```
         {
-            status: // String 'processing|accepted|on_the_way|completed'
+            status: // String
             service: // String (service name)
             requestId: // requestId
-            driver: { // null when 'processing' and 'completed'
+            driver: { // null when 'processing', 'not_found', 'canceled' and 'completed'
                 name: // driver name
                 rating: // driver rating (e.g. 4.8)
                 pictureUrl: // driver's portrait url
@@ -98,6 +98,15 @@
             }
         }
         ```
+        **Statuses**
+        Status | Description
+        --- | ---
+        `processing` | searching driver
+        `not_found` | no driver found
+        `accepted` | got a driver
+        `canceled` | ride canceled by rider or driver
+        `on_the_way` | ride in progress
+        `completed` | ride complete
     - ### cancelRide
         cancel requested ride
         ```
