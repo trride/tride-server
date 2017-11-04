@@ -99,8 +99,9 @@
         }
         ```
         **Statuses**
+
         Status | Description
-        --- | ---
+        ------ | -----------
         `processing` | searching driver
         `not_found` | no driver found
         `accepted` | got a driver
