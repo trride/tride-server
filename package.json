@@ -6,8 +6,8 @@
   "author": "<muhammad.mustadi@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@tride/gojek-handler": "latest",
-    "@tride/grab-handler": "latest",
+    "@tride/gojek-handler": "^0.2.2",
+    "@tride/grab-handler": "^0.4.2",
     "axios": "^0.17.0",
     "dotenv": "^4.0.0",
     "micro": "^9.0.0",
