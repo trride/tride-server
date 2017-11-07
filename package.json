@@ -12,10 +12,12 @@
     "boom": "^7.1.1",
     "dotenv": "^4.0.0",
     "firebase": "^4.6.1",
+    "lru-cache": "^4.1.1",
     "micro": "^9.0.1",
     "micro-compress": "^1.0.0",
     "micro-ratelimit": "^0.3.0",
     "microrouter": "^3.0.0",
+    "ms": "^2.0.0",
     "now-env": "^1.4.0",
     "shortid": "^2.2.8",
     "uber-handler": "^0.4.6"

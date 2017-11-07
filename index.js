@@ -4,11 +4,17 @@ const { router, get, post, del } = require("microrouter");
 const rateLimit = require("micro-ratelimit");
 const compress = require("micro-compress");
 
-const firebase = require("firebase");
-const firebaseApp = firebase.initializeApp({
-  databaseURL: "https://tride-431c6.firebaseio.com"
-});
-const db = firebaseApp.database();
+const ms = require("ms");
+const LRU = require("lru-cache");
+const lruOptions = {
+  max: 500,
+  maxAge: ms("1 hour")
+};
+
+const pointsCache = LRU(lruOptions);
+const coordsCache = LRU(lruOptions);
+
+const db = require("./db");
 const shortid = require("shortid");
 
 // gojek
@@ -77,14 +83,28 @@ const getPoints = async (req, res) => {
   if (!name) {
     return send(res, 400, { error: "gimme names" });
   }
-  const { poi } = (await gojek.stringToPOI(name, { lat, long })) || [];
-  send(res, 200, { points: poi });
+  const cached = pointsCache.get(name);
+  if (!!cached) {
+    send(res, 200, cached);
+  } else {
+    const { poi } = (await gojek.stringToPOI(name, { lat, long })) || [];
+    const data = { points: poi };
+    pointsCache.set(name, data);
+    send(res, 200, data);
+  }
 };
 
 const getCoords = async (req, res) => {
   const { placeid } = req.query;
-  const coords = await gojek.poiToCoord(placeid);
-  send(res, 200, { coords });
+  const cached = coordsCache.get(placeid);
+  if (!!cached) {
+    return send(res, 200, cached);
+  } else {
+    const coords = await gojek.poiToCoord(placeid);
+    const data = { coords };
+    coordsCache.set(data);
+    send(res, 200, data);
+  }
 };
 
 const createRideByService = async (req, res) => {
