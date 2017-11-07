@@ -1,12 +1,15 @@
 require("now-env").config();
 const { send, json } = require("micro");
 const { router, get, post, del } = require("microrouter");
-const firebase = require('firebase')
+const rateLimit = require("micro-ratelimit");
+const compress = require("micro-compress");
+
+const firebase = require("firebase");
 const firebaseApp = firebase.initializeApp({
-  databaseURL: 'https://tride-431c6.firebaseio.com'
-})
-const db = firebaseApp.database()
-const shortid = require('shortid')
+  databaseURL: "https://tride-431c6.firebaseio.com"
+});
+const db = firebaseApp.database();
+const shortid = require("shortid");
 
 // gojek
 // const GojekHandler = require("@tride/gojek-handler");
@@ -58,11 +61,7 @@ const getPrices = async (req, res) => {
     .catch(err => {
       return err.response.data;
     });
-  const allPrices = await Promise.all([
-    gojekPrice,
-    grabPrice,
-    uberPrice
-  ]);
+  const allPrices = await Promise.all([gojekPrice, grabPrice, uberPrice]);
 
   allPrices.sort((a, b) => a.price - b.price);
   if (typeof allPrices[0].price === "number") {
@@ -94,42 +93,47 @@ const createRideByService = async (req, res) => {
   const lowercaseService = service.toLowerCase();
 
   try {
+    let response;
 
-    let response
-    
     if (lowercaseService === "gojek")
-    response = await gojek.requestRide(key, start, end);
+      response = await gojek.requestRide(key, start, end);
     else if (lowercaseService === "grab")
-    response = await grab.requestRide(key, start, end);
+      response = await grab.requestRide(key, start, end);
     else if (lowercaseService === "uber")
-    response = await uber.requestRide(key, start, end);
-    
-    const field = 'rides'
-    const trideId = shortid.generate()
+      response = await uber.requestRide(key, start, end);
 
-    db.ref().child(field).child(trideId).set(response)
-    send(res, 200, {...response, trideId});
+    const field = "rides";
+    const trideId = shortid.generate();
+
+    db
+      .ref()
+      .child(field)
+      .child(trideId)
+      .set(response);
+    send(res, 200, { ...response, trideId });
 
     const interval = setInterval(() => {
-      const { requestId } = response
+      const { requestId } = response;
       const servicesGetStatusMethod = {
         // gojek: gojek.rideStatus,
         // grab: grab.rideStatus,
         uber: uber.rideStatus
-      }
-      const rideRequest = servicesGetStatusMethod[lowercaseService]
+      };
+      const rideRequest = servicesGetStatusMethod[lowercaseService];
 
       rideRequest(requestId)
-      .then(status => {
-        db.ref().child(field).child(trideId).set(status)
+        .then(status => {
+          db
+            .ref()
+            .child(field)
+            .child(trideId)
+            .set(status);
 
-        if (status.status == 'completed' || status.status == 'canceled')
-        clearInterval(interval)
-      })
-      .catch(console.log)
-
-    }, 2000)
-
+          if (status.status == "completed" || status.status == "canceled")
+            clearInterval(interval);
+        })
+        .catch(console.log);
+    }, 2000);
   } catch (err) {
     return send(res, 500, {
       service: lowercaseService,
@@ -156,7 +160,7 @@ const cancelRideById = async (req, res) => {
       return send(res, 200, { cancelled });
     } else if (lowercaseService === "uber") {
       const { cancelled } = await uber.cancelRide(requestId);
-      return send(res, 200, { cancelled })
+      return send(res, 200, { cancelled });
     }
   } catch (err) {
     return send(res, 500, {
@@ -173,11 +177,15 @@ const cancelRideById = async (req, res) => {
 
 const notFound = (req, res) => send(res, 404, "Route not found.");
 
-module.exports = router(
-  get("/estimate", getPrices),
-  get("/points", getPoints),
-  get("/coords", getCoords),
-  post("/rides/:service", createRideByService),
-  del("/rides/:service/:requestId", cancelRideById),
-  get("/*", notFound)
+module.exports = rateLimit(
+  compress(
+    router(
+      get("/estimate", getPrices),
+      get("/points", getPoints),
+      get("/coords", getCoords),
+      post("/rides/:service", createRideByService),
+      del("/rides/:service/:requestId", cancelRideById),
+      get("/*", notFound)
+    )
+  )
 );
