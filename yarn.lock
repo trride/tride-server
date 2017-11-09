@@ -50,15 +50,15 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.3.tgz#e94f7e772f40e48a2dc52e57d1df38b28bf98e39"
 
 "@tride/gojek-handler@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.2.2.tgz#e95be88533f0159abda7dea30be15c8b080ac9e9"
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.2.3.tgz#6d6e455cbae20e3f9d4052414f9f6790ff94f309"
   dependencies:
     axios "^0.17.0"
     ms "^2.0.0"
 
 "@tride/grab-handler@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@tride/grab-handler/-/grab-handler-0.4.2.tgz#9b42c721cb3ef06adb74b69ede5a970dc9295535"
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@tride/grab-handler/-/grab-handler-0.4.5.tgz#5c28343c24406160e2ff3feda8e06447c10ed7c1"
   dependencies:
     axios "^0.17.0"
     ms "^2.0.0"
@@ -319,8 +319,8 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
 color-convert@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.0.tgz#1accf97dd739b983bf994d56fec8f95853641b7a"
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.1.tgz#c1261107aeb2f294ebffec9ed9ecad529a6097ed"
   dependencies:
     color-name "^1.1.1"
 
@@ -401,9 +401,9 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debounce@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.0.2.tgz#503cc674d8d7f737099664fb75ddbd36b9626dc6"
+debounce@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.1.0.tgz#6a1a4ee2a9dc4b7c24bb012558dbcdb05b37f408"
 
 debug@2.6.9, debug@^2.2.0, debug@^2.6.9:
   version "2.6.9"
@@ -1015,10 +1015,6 @@ lru-cache@^4.0.1, lru-cache@^4.1.1:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
 
-media-typer@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
-
 micro-compress@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/micro-compress/-/micro-compress-1.0.0.tgz#53f5a80b4ad0320ca165a559b6e3df145d4f704f"
@@ -1026,18 +1022,18 @@ micro-compress@^1.0.0:
     compression "^1.6.2"
 
 micro-dev@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/micro-dev/-/micro-dev-1.3.0.tgz#4d32cdb629d8f1f4cf0e9857fafd114be4eb40f0"
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/micro-dev/-/micro-dev-1.4.0.tgz#1f252b459535dba2161bed8f608f89be2a4dd6bc"
   dependencies:
     boxen "1.2.2"
     chalk "2.3.0"
     chokidar "1.7.0"
     clipboardy "1.1.4"
-    debounce "1.0.2"
+    debounce "1.1.0"
     get-port "3.2.0"
     ip "1.1.5"
     jsome "2.3.26"
-    micro "9.0.0"
+    micro "9.0.1"
     mri "1.1.0"
     pkg-up "2.0.0"
     pretty-error "2.1.1"
@@ -1047,16 +1043,7 @@ micro-ratelimit@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/micro-ratelimit/-/micro-ratelimit-0.3.0.tgz#2dc486c197d2f40ace6a25a9bd87f9fbcd692467"
 
-micro@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/micro/-/micro-9.0.0.tgz#c07006a4297099bef9c7a4a318711a77209a4b72"
-  dependencies:
-    is-stream "1.1.0"
-    media-typer "0.3.0"
-    mri "1.1.0"
-    raw-body "2.3.2"
-
-micro@^9.0.1:
+micro@9.0.1, micro@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/micro/-/micro-9.0.1.tgz#4ef68b8c34ca2a02f5be3416a3b9977489e0d21a"
   dependencies:

@@ -201,6 +201,7 @@ module.exports = rateLimit(
   compress(
     router(
       get("/estimate", getPrices),
+      get("/estimates", getPrices),
       get("/points", getPoints),
       get("/coords", getCoords),
       post("/rides/:service", createRideByService),
