@@ -29,7 +29,7 @@ const GrabHandler = require("@tride/grab-handler");
 const grab = new GrabHandler(process.env.grab_token);
 
 // uber
-const UberHandler = require("uber-handler");
+const UberHandler = require("@tride/uber-handler");
 const uber = new UberHandler({
   access_token: process.env.uber_token,
   sandbox: true
@@ -196,7 +196,7 @@ const cancelRideById = async (req, res) => {
 };
 
 const reverseGeo = async (req, res) => {
-  const { latitude, longitude } = req.params;
+  const { latitude, longitude } = req.query;
   try {
     const data = await gojek.reverseGeocode({ latitude, longitude });
     return send(res, 200, data);
@@ -215,6 +215,7 @@ module.exports = rateLimit(
       get("/estimates", getPrices),
       get("/points", getPoints),
       get("/coords", getCoords),
+      get("/location", reverseGeo),
       post("/rides/:service", createRideByService),
       del("/rides/:service/:requestId", cancelRideById),
       get("/*", notFound)
