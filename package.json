@@ -6,8 +6,8 @@
   "author": "<muhammad.mustadi@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@tride/gojek-handler": "^0.2.2",
-    "@tride/grab-handler": "^0.4.2",
+    "@tride/gojek-handler": "latest",
+    "@tride/grab-handler": "latest",
     "axios": "^0.17.0",
     "boom": "^7.1.1",
     "dotenv": "^4.0.0",
@@ -20,7 +20,7 @@
     "ms": "^2.0.0",
     "now-env": "^1.4.0",
     "shortid": "^2.2.8",
-    "uber-handler": "^0.4.6"
+    "@tride/uber-handler": "latest"
   },
   "devDependencies": {
     "micro-dev": "^1.3.0"
