@@ -209,6 +209,7 @@ const reverseGeo = async (req, res) => {
 const notFound = (req, res) => send(res, 404, "Route not found.");
 
 module.exports = rateLimit(
+  { window: ms("10 seconds"), limit: 20, headers: true },
   compress(
     router(
       get("/estimate", getPrices),
