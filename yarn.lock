@@ -49,21 +49,21 @@
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.4.tgz#ec8438b780baff09254076efe345f30fdb41243e"
 
-"@tride/gojek-handler@latest":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.3.2.tgz#0e0c0108256f929b268cd6fbe4655030a6f89fac"
+"@tride/gojek-handler@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.3.3.tgz#183e904169addfc921f5a7322a1fbdcee92f2837"
   dependencies:
     axios "^0.17.0"
     ms "^2.0.0"
 
-"@tride/grab-handler@latest":
+"@tride/grab-handler@^0.4.5":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@tride/grab-handler/-/grab-handler-0.4.5.tgz#5c28343c24406160e2ff3feda8e06447c10ed7c1"
   dependencies:
     axios "^0.17.0"
     ms "^2.0.0"
 
-"@tride/uber-handler@latest":
+"@tride/uber-handler@^0.4.12":
   version "0.4.12"
   resolved "https://registry.yarnpkg.com/@tride/uber-handler/-/uber-handler-0.4.12.tgz#76f5dd4c4897dd486593431d3ab12227f290d088"
   dependencies:

@@ -129,7 +129,7 @@ const createRideByService = async (req, res) => {
       .ref()
       .child(field)
       .child(trideId)
-      .set(response);
+      .set(response); //rides/trideId
     send(res, 200, { ...response, trideId });
 
     const interval = setInterval(() => {
@@ -193,6 +193,17 @@ const cancelRideById = async (req, res) => {
       message: `Service ${lowercaseService} not found`
     }
   });
+};
+
+const reverseGeo = async (req, res) => {
+  const { latitude, longitude } = req.params;
+  try {
+    const data = await gojek.reverseGeocode({ latitude, longitude });
+    return send(res, 200, data);
+  } catch (err) {
+    console.error(err);
+    return send(res, 500, { error: { message: "Network Error." } });
+  }
 };
 
 const notFound = (req, res) => send(res, 404, "Route not found.");
