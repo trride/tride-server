@@ -50,8 +50,8 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.4.tgz#ec8438b780baff09254076efe345f30fdb41243e"
 
 "@tride/gojek-handler@^0.3.3":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.3.5.tgz#fbbac69d0e8b4b00dda3c93a14dd1de8a9bb99b3"
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/@tride/gojek-handler/-/gojek-handler-0.3.6.tgz#0fab19bfc7ad442e07abd6655651775b534345a0"
   dependencies:
     axios "^0.17.0"
     ms "^2.0.0"
