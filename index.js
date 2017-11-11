@@ -2,8 +2,8 @@ require("now-env").config();
 const axios = require('axios')
 const { send, json } = require("micro");
 const { router, get, post, del } = require("microrouter");
-const rateLimit = require("micro-ratelimit");
-const compress = require("micro-compress");
+// const rateLimit = require("micro-ratelimit");
+// const compress = require("micro-compress");
 
 const ms = require("ms");
 const LRU = require("lru-cache");
@@ -31,7 +31,7 @@ const GrabHandler = require("@tride/grab-handler");
 const grab = new GrabHandler(process.env.grab_token);
 
 // uber
-const UberHandler = require("@tride/uber-handler");
+const UberHandler = require("uber-handler");
 const uber = new UberHandler({
   access_token: process.env.uber_token,
   sandbox: true
