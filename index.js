@@ -37,7 +37,7 @@ const uber = new UberHandler({
   sandbox: true
 });
 
-const sms = (phoneNumber = process.env.defaultPhoneNumber, message) => {
+const sms = (message, phoneNumber = process.env.defaultPhoneNumber) => {
   axios.post('https://api.mainapi.net/smsnotification/1.0.0/messages', {
     msisdn: phoneNumber,
     content: message
