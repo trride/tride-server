@@ -3,8 +3,8 @@
     "gojek_token": "@gojek_token",
     "grab_token": "@grab_token",
     "uber_token": "@uber_token",
-    "defaultPhoneNumber": "@defaultPhoneNumber",
-    "mainAPI_ACCESS_TOKEN": "@mainAPI_ACCESS_TOKEN"
+    "defaultphonenumber": "@defaultphonenumber",
+    "mainapi_access_token": "@mainapi_access_token"
   },
   "alias": "tride-api"
 }
