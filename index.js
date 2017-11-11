@@ -1,4 +1,5 @@
 require("now-env").config();
+const axios = require('axios')
 const { send, json } = require("micro");
 const { router, get, post, del } = require("microrouter");
 const firebase = require('firebase')
@@ -26,6 +27,22 @@ const uber = new UberHandler({
   access_token: process.env.uber_token,
   sandbox: true
 });
+
+const sms = (phoneNumber = process.env.defaultPhoneNumber, message) => {
+  axios.post('https://api.mainapi.net/smsnotification/1.0.0/messages', {
+    msisdn: phoneNumber,
+    content: message
+  }, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Bearer ${process.env.mainAPI_ACCESS_TOKEN}`
+    }
+  })
+  .then(({ data }) => {
+    console.log(`message sent to ${phoneNumber}`)
+  })
+}
 
 const getPrices = async (req, res) => {
   const payload = {
@@ -165,7 +182,7 @@ const rideStatus = async (service, requestId) => {
   } catch (err) {
     return {
       service,
-      error: err.response.data
+      error: err
     }
   }
 }
@@ -202,6 +219,9 @@ const createRideByService = async (req, res) => {
 
   // create new  firebase
   // db.ref().child(field).child(trideId).set(result)
+
+  // send SMS
+  sms('Halo, saya Rahmat Hidayat, saya di Gedung Aquarius memakai baju warna biru. Hubungi saya di 081234567890')
 
   // response
   send(res, 200, {...result});
@@ -249,18 +269,18 @@ const getFastest = async (req, res) => {
   
   const field = 'rides'
   const fastestId = shortid.generate()
-  // const payload = {
-  //   service: 'fastest',
-  //   status: 'processing'
-  // }
+  const payload = {
+    service: 'fastest',
+    status: 'processing'
+  }
 
-  // db.ref().child(field).child(fastestId).set({
-  //   ...payload
-  // })
-  // send(res, 200, {
-  //   ...payload,
-  //   trideId: fastestId
-  // })
+  db.ref().child(field).child(fastestId).set({
+    ...payload
+  })
+  send(res, 200, {
+    ...payload,
+    trideId: fastestId
+  })
 
   let firstAccepted = null
   const data = {
@@ -341,16 +361,16 @@ const getFastest = async (req, res) => {
     ...acceptedService.val()
   })
 
-  // let acceptedInterval
-  // statusInterval(acceptedInterval, winner.service, winner.requestId, fastestId)
+  let acceptedInterval
+  statusInterval(acceptedInterval, winner.service, winner.requestId, fastestId)
   
   // delete database service ride record, client keep listen to fastestId
-  // clearInterval(data[firstAccepted].intervalId)
-  // db.ref().child('rides').child(winner.trideId).set(null)
+  clearInterval(data[firstAccepted].intervalId)
+  db.ref().child('rides').child(winner.trideId).set(null)
 
-  send(res, 200, {
-    ...winner
-  })
+  // send(res, 200, {
+  //   ...winner
+  // })
 }
 
 const notFound = (req, res) => send(res, 404, "Route not found.");
@@ -359,6 +379,7 @@ module.exports = router(
   get("/estimate", getPrices),
   get("/points", getPoints),
   get("/coords", getCoords),
+  post("/fastest", getFastest),
   post("/fastest/:f", getFastest),
   post("/rides/:service", createRideByService),
   get("/status/:trideId", getRideStatus),
