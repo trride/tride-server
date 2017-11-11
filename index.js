@@ -23,7 +23,7 @@ const shortid = require("shortid");
 const GojekHandler = require("@tride/gojek-handler");
 const gojek = new GojekHandler({
   authorization: process.env.gojek_token,
-  baseURL: 'htpp://localhost:4000/gojek'
+  // baseURL: 'htpp://localhost:4000/gojek'
 });
 
 // grab
@@ -104,18 +104,24 @@ const getPrices = async (req, res) => {
 };
 
 const getPoints = async (req, res) => {
+  console.log('points')
   const { lat, long, name } = req.query;
   if (!name) {
     return send(res, 400, { error: "gimme names" });
   }
   const cached = pointsCache.get(name);
   if (!!cached) {
+    console.log(cached)
     send(res, 200, cached);
   } else {
-    const { poi } = (await gojek.stringToPOI(name, { lat, long })) || [];
+    // try {
+    const { poi } = (await gojek.stringToPOI(name, { lat: lat || 106, long: long|| -6 })) || [];
     const data = { points: poi };
     pointsCache.set(name, data);
     send(res, 200, data);
+    // } catch (err) {
+    //   console.log(err)
+    // }
   }
 };
 
