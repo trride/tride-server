@@ -34,7 +34,7 @@ const grab = new GrabHandler(process.env.grab_token);
 const UberHandler = require("uber-handler");
 const uber = new UberHandler({
   access_token: process.env.uber_token,
-  sandbox: true
+  sandbox: process.env.NODE_ENV !== "production" ? true : false
 });
 
 const sms = (message, phoneNumber = process.env.defaultphonenumber) => {
@@ -465,6 +465,7 @@ module.exports = router(
   get("/estimate", getPrices),
   get("/points", getPoints),
   get("/coords", getCoords),
+  get("location", reverseGeo),
   post("/fastest", getFastest),
   post("/fastest/:f", getFastest),
   post("/rides/:service", createRideByService),
