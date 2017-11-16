@@ -465,7 +465,7 @@ module.exports = router(
   get("/estimate", getPrices),
   get("/points", getPoints),
   get("/coords", getCoords),
-  get("location", reverseGeo),
+  get("/location", reverseGeo),
   post("/fastest", getFastest),
   post("/fastest/:f", getFastest),
   post("/rides/:service", createRideByService),
