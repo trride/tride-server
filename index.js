@@ -31,7 +31,7 @@ const GrabHandler = require("@tride/grab-handler");
 const grab = new GrabHandler(process.env.grab_token);
 
 // uber
-const UberHandler = require("uber-handler");
+const UberHandler = require("@tride/uber-handler");
 const uber = new UberHandler({
   access_token: process.env.uber_token,
   sandbox: process.env.NODE_ENV !== "production" ? true : false
@@ -146,9 +146,9 @@ const cancelRide = async (service, requestId) => {
   service = service.toLowerCase();
 
   const functions = {
-    gojek: gojek.cancelRide,
-    grab: grab.cancelRide,
-    uber: uber.cancelRide,
+    gojek: gojek.cancelRide.bind(gojek),
+    grab: grab.cancelRide.bind(grab),
+    uber: uber.cancelRide.bind(uber),
     null: () =>
       Promise.resolve({
         error: {
@@ -163,16 +163,16 @@ const cancelRide = async (service, requestId) => {
   } catch (err) {
     return {
       service,
-      error: err.response.data
+      error: err //err.response.data
     };
   }
 };
 
 const requestRide = async (service, key, start, end) => {
   const functions = {
-    gojek: gojek.requestRide,
-    grab: grab.requestRide,
-    uber: uber.requestRide,
+    gojek: gojek.requestRide.bind(gojek),
+    grab: grab.requestRide.bind(grab),
+    uber: uber.requestRide.bind(uber),
     null: () =>
       Promise.resolve({
         error: {
@@ -205,9 +205,9 @@ const requestRide = async (service, key, start, end) => {
 
 const rideStatus = async (service, requestId) => {
   const functions = {
-    gojek: gojek.rideStatus,
-    grab: grab.rideStatus,
-    uber: uber.rideStatus,
+    gojek: gojek.rideStatus.bind(gojek),
+    grab: grab.rideStatus.bind(grab),
+    uber: uber.rideStatus.bind(uber),
     null: () =>
       Promise.resolve({
         error: {
@@ -291,7 +291,7 @@ const cancelRideByTrideId = async (req, res) => {
     .child("rides")
     .child(req.params.trideId)
     .once("value");
-  const { service, requestId } = snapshot.val();
+  const { service, requestId } = await snapshot.val();
   const result = await cancelRide(service, requestId);
 
   if (result.error) send(res, 500, result);
